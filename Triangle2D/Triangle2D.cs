@@ -1,18 +1,16 @@
 using Contract;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace Circle2D
+namespace Triangle2D
 {
-    public class Circle2D : CShape, IShape
+    public class Triangle2D : CShape, IShape
     {
-
         public DoubleCollection StrokeDash { get; set; }
         public SolidColorBrush Brush { get; set; }
-        public string Name => "Circle";
-        public string Icon => "Images/circle.png";
+        public string Name => "Triangle";
+        public string Icon => "Images/triangle.png";
         public int Thickness { get; set; }
 
         public void HandleStart(double x, double y)
@@ -20,6 +18,7 @@ namespace Circle2D
             _leftTop.X = x;
             _leftTop.Y = y;
         }
+
         public void HandleEnd(double x, double y)
         {
             _rightBottom.X = x;
@@ -35,59 +34,40 @@ namespace Circle2D
                     _rightBottom.Y = _leftTop.Y + width;
             }
             else
-            if (width > height)
             {
                 if (_rightBottom.X < _leftTop.X)
                     _rightBottom.X = _leftTop.X - height;
-                else _rightBottom.X = _leftTop.X + height;
+                else
+                    _rightBottom.X = _leftTop.X + height;
             }
         }
 
         public UIElement Draw(SolidColorBrush brush, int thickness, DoubleCollection dash)
         {
-            double width = Math.Abs(_rightBottom.X - _leftTop.X);
-            double height = Math.Abs(_rightBottom.Y - _leftTop.Y);
+            PointCollection points = new PointCollection();
+            points.Add(new Point(_leftTop.X + (_rightBottom.X - _leftTop.X) / 2, _leftTop.Y));
+            points.Add(new Point(_rightBottom.X, _rightBottom.Y));
+            points.Add(new Point(_leftTop.X, _rightBottom.Y));
 
-            var circle = new Ellipse()
+            var triangle = new Polygon()
             {
-                Width = width,
-                Height = height,
+                Points = points,
                 StrokeThickness = thickness,
                 Stroke = brush,
                 StrokeDashArray = dash,
             };
 
-            if (_rightBottom.X > _leftTop.X && _rightBottom.Y > _leftTop.Y)
-            {
-                Canvas.SetLeft(circle, _leftTop.X);
-                Canvas.SetTop(circle, _leftTop.Y);
-            }
-            else if (_rightBottom.X < _leftTop.X && _rightBottom.Y > _leftTop.Y)
-            {
-                Canvas.SetLeft(circle, _rightBottom.X);
-                Canvas.SetTop(circle, _leftTop.Y);
-            }
-            else if (_rightBottom.X > _leftTop.X && _rightBottom.Y < _leftTop.Y)
-            {
-                Canvas.SetLeft(circle, _leftTop.X);
-                Canvas.SetTop(circle, _rightBottom.Y);
-            }
-            else
-            {
-                Canvas.SetLeft(circle, _rightBottom.X);
-                Canvas.SetTop(circle, _rightBottom.Y);
-            }
-
-            return circle;
+            return triangle;
         }
 
         public IShape Clone()
         {
-            return new Circle2D();
+            return new Triangle2D();
         }
-        override public CShape deepCopy()
+
+        public override CShape deepCopy()
         {
-            Circle2D temp = new Circle2D();
+            Triangle2D temp = new Triangle2D();
 
             temp.LeftTop = this._leftTop.deepCopy();
             temp.RightBottom = this._rightBottom.deepCopy();
