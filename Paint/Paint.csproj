@@ -15,6 +15,7 @@
     <None Remove="Images\cut.png" />
     <None Remove="Images\dash.png" />
     <None Remove="Images\delete.png" />
+    <None Remove="Images\diamond.png" />
     <None Remove="Images\edit.png" />
     <None Remove="Images\ellipse.png" />
     <None Remove="Images\export.png" />
@@ -55,6 +56,7 @@
     <Resource Include="Images\cut.png" />
     <Resource Include="Images\dash.png" />
     <Resource Include="Images\delete.png" />
+    <Resource Include="Images\diamond.png" />
     <Resource Include="Images\edit.png" />
     <Resource Include="Images\ellipse.png" />
     <Resource Include="Images\export.png" />

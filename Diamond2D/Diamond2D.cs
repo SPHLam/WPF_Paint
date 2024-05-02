@@ -1,4 +1,4 @@
-﻿using Contract;
+using Contract;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -23,40 +23,23 @@ namespace Diamond2D
         {
             _rightBottom.X = x;
             _rightBottom.Y = y;
-
-            // Tính toán điểm trung tâm
-            double centerX = (_leftTop.X + _rightBottom.X) / 2;
-            double centerY = (_leftTop.Y + _rightBottom.Y) / 2;
-
-            // Di chuyển lại điểm trung tâm
-            _leftTop.X = centerX - (_rightBottom.X - centerX);
-            _leftTop.Y = centerY;
-            _rightBottom.X = centerX;
-            _rightBottom.Y = centerY + (_rightBottom.Y - centerY);
-
-            // Đảm bảo rằng cả hai điểm đầu vào nằm ở trên hoặc dưới
-            if (_leftTop.Y > _rightBottom.Y)
-            {
-                double temp = _leftTop.Y;
-                _leftTop.Y = _rightBottom.Y;
-                _rightBottom.Y = temp;
-            }
         }
 
         public UIElement Draw(SolidColorBrush brush, int thickness, DoubleCollection dash)
         {
-            double width = Math.Abs(_rightBottom.X - _leftTop.X);
-            double height = Math.Abs(_rightBottom.Y - _leftTop.Y);
+            PointCollection points = new PointCollection();
+            points.Add(new Point(_leftTop.X + (_rightBottom.X - _leftTop.X) / 2, _leftTop.Y));
+            points.Add(new Point(_rightBottom.X, _leftTop.Y + (_rightBottom.Y - _leftTop.Y) / 2));
+            points.Add(new Point(_leftTop.X + (_rightBottom.X - _leftTop.X) / 2, _rightBottom.Y));
+            points.Add(new Point(_leftTop.X, _leftTop.Y + (_rightBottom.Y - _leftTop.Y) / 2));
 
-            var diamond = new Polygon();
-            diamond.Stroke = brush;
-            diamond.StrokeThickness = thickness;
-            diamond.StrokeDashArray = dash;
-
-            diamond.Points.Add(new Point(_leftTop.X + (width / 2), _leftTop.Y));
-            diamond.Points.Add(new Point(_rightBottom.X, _leftTop.Y + (height / 2)));
-            diamond.Points.Add(new Point(_leftTop.X + (width / 2), _rightBottom.Y));
-            diamond.Points.Add(new Point(_leftTop.X, _leftTop.Y + (height / 2)));
+            var diamond = new Polygon()
+            {
+                Points = points,
+                StrokeThickness = thickness,
+                Stroke = brush,
+                StrokeDashArray = dash,
+            };
 
             return diamond;
         }
@@ -66,7 +49,7 @@ namespace Diamond2D
             return new Diamond2D();
         }
 
-        override public CShape deepCopy()
+        public override CShape deepCopy()
         {
             Diamond2D temp = new Diamond2D();
 
